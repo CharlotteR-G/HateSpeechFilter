@@ -16,3 +16,15 @@ jobs:
       - name: Run flake8
         run: flake8 .
         if : ${{ success() }}
+        
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: action/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4#
+        with:
+          python-version: "3.12"
+      - name: Run tests
+        run: pytest tests.py
