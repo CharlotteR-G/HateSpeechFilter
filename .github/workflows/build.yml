@@ -1,0 +1,18 @@
+name: Build
+on: [push]
+
+jobs:
+  python-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Install packages
+        run: pip install -r requirements.txt
+      - name: Run flake8
+        run: flake8 .
+        if : ${{ success() }}
