@@ -27,7 +27,7 @@ async def filter_comment(star_data: dict):
         if result[0]["label"] == "HATE":
             return {"status": "error", "message": "Message was inappropriate"}
         else:
-            # If the message is acceptable, forward the data to the database service
+            # If the message is acceptable, forward to database
             async with httpx.AsyncClient() as client:
                 db_resp = await client.post(
                     f"{DATABASE_SERVICE_URL}/stars", json=star_data
