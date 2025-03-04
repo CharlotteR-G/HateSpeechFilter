@@ -1,5 +1,17 @@
 from fastapi import FastAPI, HTTPException
 from transformers import pipeline
+import httpx
+
+app = FastAPI()
+
+DATABASE_SERVICE_URL = "http://127.0.0.1:5000"
+
+# Initialize the hate speech detection pipeline
+pipe = pipeline("text-classification", model="Hate-speech-CNERG/dehatebert-mono-english")
+
+from fastapi import FastAPI, HTTPException
+from transformers import pipeline
+import httpx
 
 app = FastAPI()
 
@@ -9,15 +21,28 @@ pipe = pipeline(
 )
 
 
-@app.post("/filter_comment/")
-async def filter_comment(comment: str):
-    try:
-        # Get the prediction from the pipeline
-        result = pipe(comment)
+DATABASE_SERVICE_URL = "http://127.0.0.1:5000"
 
-        if result[0]["label"] == "HATE":
-            return True
+@app.post("/filter")
+async def filter_comment(star_data: dict):
+    try:
+        # Extract the message from the star_data
+        message = star_data.get("message")
+        if not message:
+            raise HTTPException(status_code=400, detail="Message is required")
+
+        # Get the prediction from the pipeline
+        result = pipe(message)
+        print("Processed message:", message)
+
+        if result[0]['label'] == "HATE":
+            return {"status": "error", "message": "Message was inappropriate"}
         else:
-            return False
+            # If the message is acceptable, forward the data to the database service
+            async with httpx.AsyncClient() as client:
+                db_resp = await client.post(f"{DATABASE_SERVICE_URL}/stars", json=star_data)
+            if db_resp.status_code != 200:
+                raise HTTPException(status_code=db_resp.status_code, detail=db_resp.text)
+            return db_resp.json()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
