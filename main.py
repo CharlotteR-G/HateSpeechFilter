@@ -17,7 +17,11 @@ async def filter_comment(star_data: dict):
         if not message:
             # No message should be dealt same as hate speech, no star
             return {"status": False, "message": "Message was empty"}
-        
+
+        # Check length of message
+        if len(message) >= 256:
+            return {"status": False, "message": "Message too long"}
+
         # Get the prediction from the pipeline
         result = pipe(message)
 
@@ -25,6 +29,6 @@ async def filter_comment(star_data: dict):
             return {"status": False, "message": "Message was inappropriate"}
         else:
             return {"status": True, "message": "Message was acceptable"}
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
