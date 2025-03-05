@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# Include only these files
+!main.py
+!requirements.txt
+!Dockerfile
+!README.md
+!test.py

@@ -30,6 +30,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the application code
 COPY . .
 
+# Initialize the Hugging Face pipeline during the build process
+RUN python3 -c "from transformers import pipeline; pipeline('text-classification', model='Hate-speech-CNERG/dehatebert-mono-english')"
+
 # Expose the port the app runs on
 EXPOSE 7000
 
