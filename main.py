@@ -20,7 +20,7 @@ async def filter_comment(star_data: dict):
 
         # Check length of message
         if len(message) >= 256:
-            return {"status": False, "message": "Message too long"}
+            return {"status": False, "message": "Message was too long"}
 
         # Get the prediction from the pipeline
         result = pipe(message)
