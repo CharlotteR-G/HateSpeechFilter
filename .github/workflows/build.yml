@@ -4,6 +4,10 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  packages: write    
+
 jobs:
   python-formatting:
     runs-on: ubuntu-latest
