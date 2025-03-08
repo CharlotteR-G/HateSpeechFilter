@@ -1,16 +1,16 @@
 from fastapi import FastAPI, HTTPException
 from transformers import pipeline
-import torch  # Import PyTorch
 
 app = FastAPI()
 
 # Initialize the hate speech detection pipeline with CPU
 device = "cpu"  # Force CPU usage
 pipe = pipeline(
-    "text-classification", 
-    model="Hate-speech-CNERG/dehatebert-mono-english", 
-    device=device  # Set device to CPU
+    "text-classification",
+    model="Hate-speech-CNERG/dehatebert-mono-english",
+    device=device,  # Set device to CPU
 )
+
 
 @app.post("/filter")
 async def filter_comment(star_data: dict):
