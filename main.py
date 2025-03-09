@@ -11,6 +11,7 @@ pipe = pipeline(
     device=device,  # Set device to CPU
 )
 
+
 @app.post("/filter")
 async def filter_comment(star_data: dict):
     try:
