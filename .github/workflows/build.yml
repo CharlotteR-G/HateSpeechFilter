@@ -55,7 +55,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/charlotter-g/hate-speech-filter:latest .
+          docker build -t ghcr.io/sse-groupies/commentfilter/comment-filter:latest .
       - name: Push Docker image
         run: |
-          docker push ghcr.io/charlotter-g/hate-speech-filter:latest
+          docker push ghcr.io/sse-groupies/commentfilter/comment-filter:latest

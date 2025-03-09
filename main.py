@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from transformers import pipeline
+import torch
 
 app = FastAPI()
 
