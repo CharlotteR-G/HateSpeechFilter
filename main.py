@@ -1,6 +1,5 @@
 from fastapi import FastAPI, HTTPException
 from transformers import pipeline
-import torch
 
 app = FastAPI()
 
@@ -11,7 +10,6 @@ pipe = pipeline(
     model="Hate-speech-CNERG/dehatebert-mono-english",
     device=device,  # Set device to CPU
 )
-
 
 @app.post("/filter")
 async def filter_comment(star_data: dict):
