@@ -81,7 +81,7 @@ jobs:
       - name: Deploy to Azure Container Apps
         run: |
           RG="${{ secrets.AZURE_RESOURCE_GROUP }}"
-          APP_NAME="${{ secrets.AZURE_COMMENT_FILTER_APP_NAME }}"  # 🔹 Ensure this is set in GitHub secrets
+          APP_NAME="${{ secrets.AZURE_COMMENT_FILTER_APP_NAME }}"
           LOCATION="${{ secrets.AZURE_LOCATION }}"
           IMAGE_NAME="ghcr.io/sse-groupies/commentfilter/comment-filter:latest"
 
@@ -90,7 +90,7 @@ jobs:
             --resource-group $RG \
             --image $IMAGE_NAME \
             --environment $RG-env \
-            --target-port 7000 \  # 🔹 Change if your app listens on a different port
+            --target-port 7000 \
             --ingress external \
             --registry-server ghcr.io \
             --registry-username "${{ github.actor }}" \
