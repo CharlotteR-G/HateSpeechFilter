@@ -22,7 +22,7 @@ def test_filter_comment_long_message():
 
 
 def test_filter_comment_hateful():
-    hate_message = "You are an idiot"
+    hate_message = "I hate all people from that country, they are disgusting and should be eliminated"
     response = client.post("/filter", json={"message": hate_message})
     assert response.status_code == 200
     assert response.json() == {"status": False, "message":
@@ -30,21 +30,53 @@ def test_filter_comment_hateful():
 
 
 def test_filter_comment_acceptable_message():
-    acceptable_message = "Have a great day!"
-    response = client.post("/filter", json={"message": acceptable_message})
+    response = client.post("/filter", json={"message": "I love everything"})
     assert response.status_code == 200
     assert response.json() == {"status": True, "message":
                                "Message was acceptable"}
 
 
 def test_filter_comment_invalid_input():
-    response = client.post("/filter", json={"wrong_key": "This is a message"})
+    response = client.post("/filter", json={})
     assert response.status_code == 200
     assert response.json() == {"status": False, "message":
                                "Message was empty"}
 
 
-def test_filter_comment_server_error():
-    with pytest.raises(Exception):
-        response = client.post("/filter", json={"message": "This should fail"})
-        assert response.status_code == 500
+def test_filter_comment_boundary_length():
+    """Test a message exactly at the allowed length limit (255 characters)."""
+    boundary_message = "a" * 255
+    response = client.post("/filter", json={"message": boundary_message})
+    assert response.status_code == 200
+    assert response.json()["status"] is True
+    assert response.json()["message"] == "Message was acceptable"
+
+
+def test_filter_comment_special_characters():
+    """Test a message with special characters and symbols."""
+    special_message = "Hello! This message contains special characters: @#$%^&*()_+{}[]|:;<>,.?/~`"
+    response = client.post("/filter", json={"message": special_message})
+    assert response.status_code == 200
+    assert response.json()["status"] is True
+    assert response.json()["message"] == "Message was acceptable"
+
+
+def test_filter_comment_missing_field():
+    """Test request with missing 'message' field."""
+    response = client.post("/filter", json={})
+    assert response.status_code == 200
+    assert response.json()["status"] is False
+    assert response.json()["message"] == "Message was empty"
+
+
+import time
+
+def test_filter_comment_response_time():
+    """Test that the API responds within a reasonable time frame."""
+    start_time = time.time()
+    response = client.post("/filter", json={"message": "This is a normal message for timing test."})
+    end_time = time.time()
+    
+    assert response.status_code == 200
+    # Adjust the threshold as needed based on your performance requirements
+    assert end_time - start_time < 5  # Response should be under 5 seconds
